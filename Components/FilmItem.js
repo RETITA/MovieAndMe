@@ -5,6 +5,15 @@ import FadeIn from '../Animations/FadeIn'
 
 class FilmItem extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      displayDate: false
+    }
+
+    this._onLongPressButton = this._onLongPressButton.bind(this)
+  }
+
   _displayFavoriteImage() {
     if (this.props.isFilmFavorite) {
       // Si la props isFilmFavorite vaut true, on affiche le 🖤
@@ -17,11 +26,20 @@ class FilmItem extends React.Component {
     }
   }
 
-  render(){
-    const { film, displayDetailForFilm } = this.props
-    return(
-      <FadeIn>
-      <TouchableOpacity style={styles.main_container} onPress={() => displayDetailForFilm(film.id)}>
+  _onLongPressButton() {
+    if(this.state.displayDate){
+      this.setState({ displayDate: false })
+    }else{
+      this.setState({ displayDate: true })
+    }
+    
+  }
+
+  _displayFilm(){
+    const { film, displayDetailForFilm, seenList } = this.props
+    if(seenList){
+      return(
+        <TouchableOpacity style={styles.main_container} onPress={() => displayDetailForFilm(film.id)}>
         <Image
           style={styles.image}
           source={{uri: getImageFromApi(film.poster_path)}}
@@ -41,6 +59,35 @@ class FilmItem extends React.Component {
           </View>
         </View>
       </TouchableOpacity>
+      )
+    }else{
+      return(
+        <TouchableOpacity style={styles.main_container} onLongPress={this._onLongPressButton} onPress={() => displayDetailForFilm(film.id)}>
+        <Image
+          borderRadius={100}
+          style={styles.imageSeen}
+          source={{uri: getImageFromApi(film.poster_path)}}
+        />
+       
+       <View style={styles.content_container_seen}>
+          <View style={styles.header_container}>
+            {this._displayFavoriteImage()}
+            <Text style={styles.title_text}>
+              {!this.state.displayDate ? film.title : film.release_date}
+            </Text>
+            
+          </View>
+        </View>
+      
+      </TouchableOpacity>
+      )
+    }
+  }
+
+  render(){
+    return(
+      <FadeIn>
+        {this._displayFilm()}
       </FadeIn>
     )
   }
@@ -48,12 +95,18 @@ class FilmItem extends React.Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    height: 190,
+    height: 90,
     flexDirection: 'row'
   },
   image: {
     width: 120,
     height: 180,
+    margin: 5,
+    backgroundColor: 'gray'
+  },
+  imageSeen: {
+    width: 70,
+    height: 70,
     margin: 5,
     backgroundColor: 'gray'
   },
@@ -64,6 +117,11 @@ const styles = StyleSheet.create({
   header_container: {
     flex: 3,
     flexDirection: 'row'
+  },
+  content_container_seen: {
+    flex: 1,
+    margin: 5,
+    justifyContent: 'center'
   },
   title_text: {
     fontWeight: 'bold',
