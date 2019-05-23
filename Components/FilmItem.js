@@ -37,7 +37,7 @@ class FilmItem extends React.Component {
 
   _displayFilm(){
     const { film, displayDetailForFilm, seenList } = this.props
-    if(seenList){
+    if(!seenList){
       return(
         <TouchableOpacity style={styles.main_container} onPress={() => displayDetailForFilm(film.id)}>
         <Image
@@ -62,7 +62,7 @@ class FilmItem extends React.Component {
       )
     }else{
       return(
-        <TouchableOpacity style={styles.main_container} onLongPress={this._onLongPressButton} onPress={() => displayDetailForFilm(film.id)}>
+        <TouchableOpacity style={styles.main_container_seen} onLongPress={this._onLongPressButton} onPress={() => displayDetailForFilm(film.id)}>
         <Image
           borderRadius={100}
           style={styles.imageSeen}
@@ -94,7 +94,14 @@ class FilmItem extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  
+  
   main_container: {
+    height: 190,
+    flexDirection: 'row'
+  },
+
+  main_container_seen: {
     height: 90,
     flexDirection: 'row'
   },

@@ -12,7 +12,8 @@ class Seen extends React.Component {
         <FilmList
           films={this.props.seensFilm}
           navigation={this.props.navigation}
-          favoriteList={true}
+          favoriteList={false}
+          seenList={true}
         />
       </View>
     )
